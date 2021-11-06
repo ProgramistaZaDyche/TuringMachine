@@ -1,2 +1,2 @@
 class TuringMachine:
-    siusiak = 1
+    temp = 1

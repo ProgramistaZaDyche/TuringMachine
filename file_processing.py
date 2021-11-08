@@ -30,6 +30,7 @@ class DataFromFile:
 
             content = file.readline()
             word = [character for character in content.split(": ")[1]]
+            self.__surround_the_word(word)
             word_length = self.__correct_word_length(word, word_length)
 
             content = file.readline()
@@ -77,3 +78,21 @@ class DataFromFile:
         for state in states:
             states_dict[state[0]] = [case.split(",") for case in state[1:]]
         return states_dict
+
+    @staticmethod
+    def __surround_the_word(word):
+        if word[0] == "_":
+            if word[1] == "_":
+                pass
+            else:
+                word = "_" + word
+        else:
+            word = "__" + word
+
+        if word[-1] == "_":
+            if word[-2] == "_":
+                pass
+            else:
+                word = word + "_"
+        else:
+            word = word + "__"

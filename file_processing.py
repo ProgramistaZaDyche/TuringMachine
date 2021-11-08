@@ -8,7 +8,8 @@ class BadStateException(Exception):
 class DataFromFile:
     """The underscore sign (_) is a default blank sign
     Steps in states are split with commas (,)
-    There is no special sign indicating end of line"""
+    There is no special sign indicating end of line
+    List of lists with rules are being split into dictonaries of {string:list}"""
 
     def __init__(self, file_name):
         self.file_name = file_name
@@ -45,9 +46,11 @@ class DataFromFile:
                 singular_state.append(line.strip(" ,;:"))
                 iterator += 1
                 if iterator == len(alphabet):
+                    iterator = 0
                     states.append(singular_state)
                     del singular_state
-            return TuringMachine(title, state_names, alphabet, word_length, word, final_state, initial_state, states)
+            states_dict = self.__states_to_dict(states)
+            return TuringMachine(title, state_names, alphabet, word_length, word, final_state, initial_state, states_dict)
 
     @staticmethod
     def __correct_word_length(word, word_length):
@@ -67,3 +70,10 @@ class DataFromFile:
         if initial_state == final_state:
             raise BadStateException("Given initial state and final state are one and the same, "
                                     "please correct the mistake.")
+
+    @staticmethod
+    def __states_to_dict(states):
+        states_dict = {}
+        for state in states:
+            states_dict[state[0]] = [case.split(",") for case in state[1:]]
+        return states_dict

@@ -1,46 +1,69 @@
+from turing import TuringMachine
+
+
 class BadStateException(Exception):
     pass
 
 
 class DataFromFile:
+    """The underscore sign (_) is a default blank sign
+    Steps in states are split with commas (,)
+    There is no special sign indicating end of line"""
 
     def __init__(self, file_name):
-        with open(file_name, "r") as file:
+        self.file_name = file_name
+
+    def create_turing_machine(self):
+        with open(self.file_name, "r") as file:
             content = file.readline()
-            self.title = content.split(": ")[1]
+            title = content.split(": ")[1]
 
             content = file.readline()
-            self.states = content.split(": ")[1].split(",")
+            state_names = content.split(": ")[1].split(",")
 
             content = file.readline()
-            self.alphabet = content.split(": ")[1].split(",")
+            alphabet = content.split(": ")[1].split(",")
 
             content = file.readline()
-            self.word_length = int(content.split(": ")[1])
+            word_length = int(content.split(": ")[1])
 
             content = file.readline()
-            self.word = [character for character in content.split(": ")[1]]
-            self.__correct_word_length()
+            word = [character for character in content.split(": ")[1]]
+            word_length = self.__correct_word_length(word, word_length)
 
             content = file.readline()
-            self.final_state = content.split(": ")[1]
+            final_state = content.split(": ")[1]
 
             content = file.readline()
-            self.initial_state = content.split(": ")[1]
+            initial_state = content.split(": ")[1]
+            self.__correct_states(final_state, initial_state, state_names)
 
-    def __correct_word_length(self):
-        actual_length = len(self.word)
-        if self.word_length != actual_length:
-            print(f"Given word length is incorrect. Given word length is {self.word_length}"
+            states = []
+            singular_state = []
+            iterator = 0
+            for line in file:
+                singular_state.append(line.strip(" ,;:"))
+                iterator += 1
+                if iterator == len(alphabet):
+                    states.append(singular_state)
+                    del singular_state
+            return TuringMachine(title, state_names, alphabet, word_length, word, final_state, initial_state, states)
+
+    @staticmethod
+    def __correct_word_length(word, word_length):
+        actual_length = len(word)
+        if word_length != actual_length:
+            print(f"Given word length is incorrect. Given word length is {word_length}"
                   f" while actual value is {actual_length}.")
-            self.word_length = actual_length
-            print("Worry not, the programme shall continue it's work.")
+            print("Worry not, the program shall continue it's work.")
+        return actual_length
 
-    def __correct_state(self):
-        if self.initial_state not in self.states:
+    @staticmethod
+    def __correct_states(initial_state, final_state, state_names):
+        if initial_state not in state_names:
             raise BadStateException("Given initial state is not in defined set of states, please correct the mistake.")
-        if self.final_state not in self.states:
+        if final_state not in state_names:
             raise BadStateException("Given final state is not in defined set of states, please correct the mistake.")
-        if self.initial_state == self.final_state:
+        if initial_state == final_state:
             raise BadStateException("Given initial state and final state are one and the same, "
                                     "please correct the mistake.")

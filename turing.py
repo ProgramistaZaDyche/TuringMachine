@@ -1,4 +1,4 @@
-from states import State
+from time import sleep
 
 
 class TuringMachine:
@@ -11,14 +11,17 @@ class TuringMachine:
         self._final_state = final_state
         self._initial_state = initial_state
         self._states = states_dict
-        # self._states = [State(key, case) for key, case in states_dict.items()]
-        # self._actual_state = self._initial_state
         self._current_state = self._initial_state
         self._needle_position = 2
-        self._needle = "".join([" "*(self._needle_position-1), "|\n", " "*(self._needle_position-1), "v"])
+        self._needle = "".join([" "*self._needle_position, "|\n", " "*self._needle_position, "V"])
 
-    def __execute(self):
+    def execute(self):
         while self._current_state != self._final_state:
+            print("===================")
+            print(f"Current state: {self._current_state}")
+            print(self._needle)
+            print(self._word)
+
             # searching for rule line to execute
             to_execute = self.__find_rule()
             # changing current state of the machine
@@ -30,6 +33,8 @@ class TuringMachine:
             # checking the position of the needle
             if self._needle_position == 1 or self._needle_position == self._word_length-1:
                 self.__expand_word()
+
+            sleep(1)
 
     def __expand_word(self):
         if self._needle_position == 1:
@@ -44,7 +49,7 @@ class TuringMachine:
             self._needle_position += 1
         elif move_command == "l":
             self._needle_position -= 1
-        self._needle = "".join([" "*(self._needle_position-1), "|\n", " "*(self._needle_position-1), "v"])
+        self._needle = "".join([" "*self._needle_position, "|\n", " "*self._needle_position, "V"])
 
     def __change_character(self, character):
         self._word = "".join([self._word[:self._needle_position], character, self._word[self._needle_position + 1:]])
@@ -56,4 +61,3 @@ class TuringMachine:
 
     def __change_current_state(self, new_state):
         self._current_state = new_state
-        

@@ -5,6 +5,14 @@ class BadStateException(Exception):
     pass
 
 
+class BadCharacterException(Exception):
+    pass
+
+
+class BadMovementInstructionException(Exception):
+    pass
+
+
 class DataFromFile:
     """The underscore sign (_) is a default blank sign
     Steps in states are split with commas (,)
@@ -31,7 +39,7 @@ class DataFromFile:
             content = file.readline().strip("\n")
             word = "".join([character for character in content.split(":")[1].lstrip()])
             word = self.__surround_the_word(word)
-            word_length = self.__correct_word_length(word, word_length)
+            word_length = self.__correct_word_length(word)
 
             content = file.readline().strip("\n")
             final_states = content.split(":")[1].lstrip().split(",")
@@ -54,10 +62,12 @@ class DataFromFile:
                 iterator += 1
 
             states_dict = self.__states_to_dict(states)
-            return TuringMachine(title, state_names, alphabet, word_length, word, final_states, initial_state, states_dict)
+            self.__check_the_dict(states_dict, state_names, alphabet)
+            return TuringMachine(title, state_names, alphabet, word_length, word, final_states, initial_state,
+                                 states_dict)
 
     @staticmethod
-    def __correct_word_length(word, word_length):
+    def __correct_word_length(word):
         actual_length = len(word)
         return actual_length
 
@@ -77,6 +87,28 @@ class DataFromFile:
         for state in states:
             states_dict[state[0]] = [case.split(",") for case in state[1:]]
         return states_dict
+
+    @staticmethod
+    def __check_the_dict(states_dict, state_names, alphabet):
+        for key, value in states_dict.items():
+            if key not in state_names:
+                raise BadStateException(f"There is a non-existent state in the instructions section:\n"
+                                        f"{key}(Bad state): {value}\n")
+            for single_instruction in value:
+                if single_instruction[1] not in state_names:
+                    raise BadStateException(f"There is a non-existent state in the instructions section:\n"
+                                            f"{key}: {value}\n"
+                                            f"{single_instruction}")
+                if single_instruction[0] not in alphabet or single_instruction[2] not in alphabet:
+                    raise BadCharacterException(f"There is a non-existent alphabet character in the "
+                                                f"instructions section:\n"
+                                                f"{key}: {value}\n"
+                                                f"{single_instruction}")
+                if single_instruction[3] not in ["r", "l", "s"]:
+                    raise BadMovementInstructionException(f"There is an unknown movement instruction in the "
+                                                          f"instructions section:\n"
+                                                          f"{key}: {value}\n"
+                                                          f"{single_instruction}")
 
     @staticmethod
     def __surround_the_word(word):

@@ -1,0 +1,4 @@
+Initial word: __011001__
+Instruction name: Â€NEGACJAÂ€
+Word after algorithm: __100110__
+Ending state: k

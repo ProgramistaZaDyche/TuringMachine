@@ -1,0 +1,4 @@
+Initial word: __11010__
+Instruction name: BINARNY NASTEPNIK
+Word after algorithm: __11010__
+Ending state: qa

@@ -28,10 +28,10 @@ class DataFromFile:
             title = content.split(": ")[1].strip(""" ,".""").upper()
 
             content = file.readline().strip("\n")
-            state_names = content.split(":")[1].lstrip().split(",")
+            state_names = [state.strip() for state in content.split(":")[1].lstrip().split(",")]
 
             content = file.readline().strip("\n")
-            alphabet = content.split(":")[1].lstrip().split(",")
+            alphabet = [state.strip() for state in content.split(":")[1].lstrip().split(",")]
 
             content = file.readline().strip("\n")
             word_length = int(content.split(":")[1].lstrip())
@@ -42,24 +42,25 @@ class DataFromFile:
             word_length = self.__correct_word_length(word)
 
             content = file.readline().strip("\n")
-            final_states = content.split(":")[1].lstrip().split(",")
+            final_states = [state.strip() for state in content.split(":")[1].lstrip().split(",")]
+            # [state.strip() for state in content.split(":")[1].lstrip().split(",")]
 
             content = file.readline().strip("\n")
             initial_state = content.split(": ")[1].lstrip()
             self.__correct_states(initial_state, final_states, state_names)
 
-            file.readline()
+            file.readline()  # keyword instruction
             states = []
             singular_state = []
             iterator = 0
             for line in file:
+                iterator += 1
                 singular_state.append(line.strip(" ,;:\n"))
-                if iterator == len(alphabet):
+                if iterator == len(alphabet)+1:
                     iterator = 0
                     temp = singular_state.copy()
                     states.append(temp)
                     singular_state.clear()
-                iterator += 1
 
             states_dict = self.__states_to_dict(states)
             self.__check_the_dict(states_dict, state_names, alphabet)
@@ -93,17 +94,20 @@ class DataFromFile:
         for key, value in states_dict.items():
             if key not in state_names:
                 raise BadStateException(f"There is a non-existent state in the instructions section:\n"
-                                        f"{key}(Bad state): {value}\n")
+                                        f"{key}(Bad state): {value}\n"
+                                        f"Existing states: {state_names}")
             for single_instruction in value:
                 if single_instruction[1] not in state_names:
                     raise BadStateException(f"There is a non-existent state in the instructions section:\n"
                                             f"{key}: {value}\n"
-                                            f"{single_instruction}")
+                                            f"{single_instruction}\n"
+                                            f"Existing states: {state_names}")
                 if single_instruction[0] not in alphabet or single_instruction[2] not in alphabet:
                     raise BadCharacterException(f"There is a non-existent alphabet character in the "
                                                 f"instructions section:\n"
                                                 f"{key}: {value}\n"
-                                                f"{single_instruction}")
+                                                f"{single_instruction}"
+                                                f"Existing chars: {alphabet}")
                 if single_instruction[3] not in ["r", "l", "s"]:
                     raise BadMovementInstructionException(f"There is an unknown movement instruction in the "
                                                           f"instructions section:\n"

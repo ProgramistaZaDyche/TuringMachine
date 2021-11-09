@@ -15,10 +15,13 @@ class TuringMachine:
         self._current_state = self._initial_state
         self._needle_position = 2
         self._needle = self.__create_needle()
+        self._loop_iterator = 0
 
     def execute(self):
         self.__introduce()
+        self.__set_needle()
         while self._current_state not in self._final_states:
+            self._loop_iterator += 1
             print("===================")
             print(f"Current state: {self._current_state}")
             print(self._needle)
@@ -35,6 +38,7 @@ class TuringMachine:
             # checking the position of the needle
             if self._needle_position == 1 or self._needle_position == self._word_length-1:
                 self.__expand_word()
+            self.__force_interruption()
 
             sleep(1)
         print("===================")
@@ -85,9 +89,16 @@ class TuringMachine:
               f"And alphabet: {self._alphabet}")
 
     def __create_raport(self):
-        file = open(f"{self._title}_raport.txt", "w")
+        file = open(f"Raports\\{self._title}_raport.txt", "w")
         file.write(f"Initial word: {self._initial_word}\n"
                    f"Instruction name: {self._title}\n"
                    f"Word after algorithm: {self._word}\n"
                    f"Ending state: {self._current_state}")
         file.close()
+
+    # metoda tylko na zaliczenie
+    def __force_interruption(self):
+        if self._word_length >= 100:
+            exit("The size of the word indicates an infinite loop.")
+        elif self._loop_iterator >= 100:
+            exit("The length of the whole process indicates a infinite loop.")

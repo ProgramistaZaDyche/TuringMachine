@@ -1,0 +1,16 @@
+Opis: binary successor
+stany:  q0, q1, qk
+alfabet: 0,1,_
+długość słowa: 4
+słowo: 1100
+stany końcowe: qk
+stan początkowy: q0
+instrukcja:
+q0:
+0,q0,0,r
+1,q0,1,r
+_,q1,_,l
+q1:
+0,qk,1,s
+1,q1,0,l
+_,qk,1,s

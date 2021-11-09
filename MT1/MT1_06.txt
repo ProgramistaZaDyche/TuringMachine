@@ -1,0 +1,20 @@
+Opis: Binary divisibility by 3
+stany:  q0, q1, q2, q3, qn, qa
+alfabet: 0,1,_
+długość słowa: 4
+słowo: 1100
+stany końcowe: qn, qa
+stan początkowy: q0
+instrukcja:
+q0:
+0,q0,0,r
+1,q1,1,r
+_,qa,_,s
+q1:
+0,q2,0,r
+1,q0,1,r
+_,qn,_,s
+q2:
+0,q1,0,r
+1,q2,1,r
+_,qn,_,s

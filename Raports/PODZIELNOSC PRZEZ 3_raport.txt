@@ -1,0 +1,4 @@
+Initial word: __1100__
+Instruction name: PODZIELNOSC PRZEZ 3
+Word after algorithm: __1100__
+Ending state: qa

@@ -1,0 +1,28 @@
+opis: jezyk (b)a(cb)
+stany: p, 0, 1, 2, a, n
+alfabet: a,b,c,_
+długość słowa: 7
+słowo: ___bbbbacbcb
+stan końcowy: a,n
+stan początkowy: p
+instrukcja:
+p:
+    a,n,a,s
+    b,0,b,r
+    c,n,c,s
+    _,n,_,s
+0:
+    a,1,a,r
+    b,0,b,r
+    c,n,c,s
+    _,n,_,s
+1:
+    a,n,a,s
+    b,n,b,s
+    c,2,c,r
+    _,a,_,s
+2:
+    a,n,a,s
+    b,1,b,r
+    c,n,c,s
+    _,n,_,s

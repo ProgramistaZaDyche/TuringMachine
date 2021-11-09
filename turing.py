@@ -2,13 +2,13 @@ from time import sleep
 
 
 class TuringMachine:
-    def __init__(self, title, state_names, alphabet, word_length, word, final_state, initial_state, states_dict):
+    def __init__(self, title, state_names, alphabet, word_length, word, final_states, initial_state, states_dict):
         self._title = title
         self._state_names = state_names
         self._alphabet = alphabet
         self._word_length = word_length
         self._word = word
-        self._final_state = final_state
+        self._final_states = final_states
         self._initial_state = initial_state
         self._states = states_dict
         self._current_state = self._initial_state
@@ -16,7 +16,8 @@ class TuringMachine:
         self._needle = "".join([" "*self._needle_position, "|\n", " "*self._needle_position, "V"])
 
     def execute(self):
-        while self._current_state != self._final_state:
+        self.__introduce()
+        while self._current_state not in self._final_states:
             print("===================")
             print(f"Current state: {self._current_state}")
             print(self._needle)
@@ -35,6 +36,11 @@ class TuringMachine:
                 self.__expand_word()
 
             sleep(1)
+        print("===================")
+        print("This is the last step.")
+        print(f"Current state: {self._current_state}")
+        print(self._needle)
+        print(self._word)
 
     def __expand_word(self):
         if self._needle_position == 1:
@@ -61,3 +67,7 @@ class TuringMachine:
 
     def __change_current_state(self, new_state):
         self._current_state = new_state
+
+    def __introduce(self):
+        print(f"Introduction of algorithm {self._title}\nWith given set of states: {self._state_names}\n"
+              f"And alphabet: {self._alphabet}")

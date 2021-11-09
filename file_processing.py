@@ -17,7 +17,7 @@ class DataFromFile:
     def create_turing_machine(self):
         with open(self.file_name, "r") as file:
             content = file.readline().strip("\n")
-            title = content.split(": ")[1]
+            title = content.split(": ")[1].strip(""" ,".""").upper()
 
             content = file.readline().strip("\n")
             state_names = content.split(":")[1].lstrip().split(",")
@@ -34,11 +34,11 @@ class DataFromFile:
             word_length = self.__correct_word_length(word, word_length)
 
             content = file.readline().strip("\n")
-            final_state = content.split(":")[1].lstrip()
+            final_states = content.split(":")[1].lstrip().split(",")
 
             content = file.readline().strip("\n")
             initial_state = content.split(": ")[1].lstrip()
-            self.__correct_states(initial_state, final_state, state_names)
+            self.__correct_states(initial_state, final_states, state_names)
 
             file.readline()
             states = []
@@ -54,7 +54,7 @@ class DataFromFile:
                 iterator += 1
 
             states_dict = self.__states_to_dict(states)
-            return TuringMachine(title, state_names, alphabet, word_length, word, final_state, initial_state, states_dict)
+            return TuringMachine(title, state_names, alphabet, word_length, word, final_states, initial_state, states_dict)
 
     @staticmethod
     def __correct_word_length(word, word_length):
@@ -62,14 +62,14 @@ class DataFromFile:
         return actual_length
 
     @staticmethod
-    def __correct_states(initial_state, final_state, state_names):
+    def __correct_states(initial_state, final_states, state_names):
         if initial_state not in state_names:
-            raise BadStateException("Given initial state is not in defined set of states, please correct the mistake.")
-        if final_state not in state_names:
-            raise BadStateException("Given final state is not in defined set of states, please correct the mistake.")
-        if initial_state == final_state:
-            raise BadStateException("Given initial state and final state are one and the same, "
-                                    "please correct the mistake.")
+            raise BadStateException("Given initial state is not in defined set of states.")
+        for state in final_states:
+            if state not in state_names:
+                raise BadStateException("There is an undefined set in the given set of final states.")
+        if initial_state in final_states:
+            raise BadStateException("Given initial state is in the set of final states.")
 
     @staticmethod
     def __states_to_dict(states):

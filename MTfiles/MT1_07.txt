@@ -1,0 +1,32 @@
+Opis: Palindrome
+stany:  q0, q1, q2, q3, q4, q5, qn, qa
+alfabet: 0,1,_
+długość słowa: 5
+słowo: 10101
+stany końcowe: qn, qa
+stan początkowy: q0
+instrukcja:
+q0:
+0,q2,_,r
+1,q4,_,r
+_,qa,_,s
+q1:
+0,q1,0,l
+1,q1,1,l
+_,q0,_,r
+q2:
+0,q2,0,r
+1,q2,1,r
+_,q3,_,l
+q3:
+0,q1,_,l
+1,qn,1,s
+_,qa,_,s
+q4:
+0,q4,0,r
+1,q4,1,r
+_,q5,_,l
+q5:
+0,qn,0,s
+1,q1,_,l
+_,qa,_,s

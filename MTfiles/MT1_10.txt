@@ -1,0 +1,21 @@
+Opis: Binary Turns
+stany:  q0, q1, qs, qa, qn
+alfabet: 0,1,_
+długość słowa: 5
+słowo: 10110
+stany końcowe: qa, qn
+stan początkowy: qs
+instrukcja:
+qs:
+0,q0,0,r
+1,q1,1,r
+_,qa,_,s
+q0:
+0,qn,0,s
+1,q1,1,r
+_,qa,_,s
+q1:
+0,q0,0,r
+1,qn,1,s
+_,qa,_,s
+

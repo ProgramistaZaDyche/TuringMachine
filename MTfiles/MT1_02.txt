@@ -1,0 +1,14 @@
+Opis: Unary addition(one blank between)
+stany:  q0, q1, q2, qk
+alfabet: 1,_
+długość słowa: 4
+słowo: 1111_111
+stany końcowe: qk
+stan początkowy: q0
+instrukcja:
+q0:
+1,q1,_,r
+_,q0,_,r
+q1:
+1,q1,1,r
+_,qk,1,s
